@@ -67,37 +67,37 @@ router.get('/productList/:productId', async (req, res) => {
   });
 });
 
-// //상품 정보 수정 API(상품명, 작성 내용, 상품 상태, 비밀번호)
-// router.patch('/productList/:productId', async (req, res) => {
-//   const { productId } = req.params;
-//   const { title, content, password, order } = req.body;
+//상품 정보 수정 API(상품명, 작성 내용, 상품 상태, 비밀번호)
+router.patch('/productList/:productId', async (req, res) => {
+  const { productId } = req.params;
+  const { title, content, password } = req.body;
 
-//   const currentProductList = await Product.findById(productId).exec();
-//   if (!currentProductList) {
-//     return res
-//       .status(404)
-//       .json({ errorMessage: '해당 상품은 존재하지 않습니다.' });
-//   }
+  const currentProductList = await Product.findOne({ _id: productId }).exec();
+  if (!currentProductList) {
+    return res
+      .status(404)
+      .json({ errorMessage: '해당 상품은 존재하지 않습니다.' });
+  }
 
-//   //
+  if (
+    title === currentProductList.title &&
+    password === currentProductList.password &&
+    content !== undefined
+  ) {
+    currentProductList.content = content;
+  }
+  await currentProductList.save();
 
-//   if (order) {
-//     const targetProductList = await Product.findOne({ order }).exec();
-//     if (targetProductList) {
-//       targetProductList.order = currentProductList.order;
-//       await targetProductList.save();
-//     }
-//     currentProductList.order = order;
-//   }
-
-//   if (title !== undefined) {
-//     currentProductList.title = title;
-//   }
-
-//   if (content !== undefined) {
-//     currentProductList.content = content;
-//   }
-// });
+  return res.status(200).json({
+    title: currentProductList.title,
+    content: currentProductList.content,
+    author: currentProductList.author,
+    date: currentProductList.date,
+    status: currentProductList.status,
+    password: currentProductList.password,
+    order: currentProductList.order,
+  });
+});
 
 //상품 삭제 API(비밀번호)
 router.delete('/productList/:productId', async (req, res) => {
@@ -108,9 +108,9 @@ router.delete('/productList/:productId', async (req, res) => {
     return res.status(404).json({ message: '존재하지 않는 제품입니다.' });
   }
 
-  if (product.password !== req.params.password) {
+  if (product.password !== req.body.password) {
     return res.status(500).json({ message: '잘못된 비밀번호입니다.' });
-  } else if (product.password === req.password) {
+  } else if (product.password === req.body.password) {
     await Product.deleteOne({ _id: productId }).exec();
   }
 
