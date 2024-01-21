@@ -76,7 +76,7 @@ router.patch('/productList/:productId', async (req, res) => {
   if (!currentProductList) {
     return res
       .status(404)
-      .json({ errorMessage: '해당 상품은 존재하지 않습니다.' });
+      .json({ errorMessage: '상품 조회에 실패하였습니다.' });
   }
 
   if (
@@ -105,7 +105,7 @@ router.delete('/productList/:productId', async (req, res) => {
   const product = await Product.findOne({ _id: productId }).exec();
 
   if (!product) {
-    return res.status(404).json({ message: '존재하지 않는 제품입니다.' });
+    return res.status(404).json({ message: '상품 조회에 실패하였습니다.' });
   }
 
   if (product.password !== req.body.password) {
