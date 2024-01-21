@@ -1,0 +1,18 @@
+{
+  "name": "yes",
+  "version": "yes",
+  "main": "yes",
+  "license": "yes",
+  "type": "module",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^8.1.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.4"
+  },
+  "description": "yes",
+  "repository": "yes",
+  "author": "yes",
+  "private": false
+}
