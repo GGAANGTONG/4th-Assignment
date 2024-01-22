@@ -54,12 +54,10 @@ router.get('/productList', async (req, res) => {
   const products = await Product.find().sort({ date: -1 }).exec();
   const formattedProducts = products.map((product) => {
     return {
-      _id: product._id,
       title: product.title,
       author: product.author,
       status: product.status,
       date: product.date,
-      password: product.password,
     };
   });
 
