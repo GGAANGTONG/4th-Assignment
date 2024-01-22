@@ -6,7 +6,11 @@ dotenv.config();
 const connect = () => {
   mongoose
     .connect(
-      `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.gh7cdeu.mongodb.net/?retryWrites=true&w=majority`,
+      'mongodb+srv://' +
+        process.env.DB_USER +
+        ':' +
+        process.env.DB_PASSWORD +
+        '@cluster0.gh7cdeu.mongodb.net/?retryWrites=true&w=majority',
       {
         dbName: process.env.DB_NAME,
       }

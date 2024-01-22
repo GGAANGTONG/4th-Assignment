@@ -1,6 +1,7 @@
 import express from 'express';
 import connect from './schemas/index.js';
 import productsRouter from './routes/products.router.js';
+import errorHandlerMiddleware from './middlewares/error-handler.middleware.js';
 
 const app = express();
 const PORT = 8500;
@@ -17,6 +18,8 @@ router.get('/', (req, res) => {
 });
 
 app.use('/api', [router, productsRouter]);
+
+app.use(errorHandlerMiddleware);
 
 app.listen(PORT, () => {
   console.log(PORT, '가 연결됐습니다.');

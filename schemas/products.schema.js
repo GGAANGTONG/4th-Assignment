@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema({
   },
   author: {
     type: String,
-    required: true,
+    required: false,
   },
   status: {
     type: String,
@@ -22,7 +22,7 @@ const productSchema = new mongoose.Schema({
     required: false,
   },
   password: {
-    type: Number,
+    type: String,
     required: true,
   },
   order: {
