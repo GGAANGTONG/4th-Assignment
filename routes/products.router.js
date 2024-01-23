@@ -112,6 +112,10 @@ router.put('/productList/:productId', async (req, res, next) => {
     ) {
       currentProductList.content = content;
       currentProductList.status = status;
+    } else {
+      return res.status(400).json({
+        message: '일치하는 제품이 존재하지 않습니다.',
+      });
     }
 
     await currentProductList.save();
