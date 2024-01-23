@@ -119,3 +119,6 @@ dist
 # IDE - Jetbrains
 .vscode/*
 /.vscode
+
+#etc.
+4th Assignment Linux.txt
