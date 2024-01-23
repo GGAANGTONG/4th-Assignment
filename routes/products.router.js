@@ -15,27 +15,25 @@ const validationTest = joi.object({
 //상품 작성 API
 router.post('/productList', async (req, res, next) => {
   try {
-    let date = '';
     let status = '';
 
-    date = date !== undefined ? new Date() : null;
     status = status !== undefined ? 'FOR_SALE' : null;
 
     const insertedProductMaxOrder = await Product.findOne()
-      .sort({ date: -1 })
+      .sort({ createdAt: -1 })
       .exec();
     const insertedProductOrder = insertedProductMaxOrder
       ? insertedProductMaxOrder.order + 1
       : 1;
 
     const validation = await validationTest.validateAsync(req.body);
-    const { title, content, author, password } = validation;
+    const { title, content, author, password, createdAt } = validation;
 
     const productList = new Product({
       title,
       content,
       author,
-      date,
+      createdAt,
       status,
       password,
       order: insertedProductOrder,
@@ -43,7 +41,7 @@ router.post('/productList', async (req, res, next) => {
 
     await productList.save();
 
-    return res.status(201).json({ productList: productList });
+    return res.status(201).json({ message: '판매 상품을 등록하였습니다.' });
   } catch (error) {
     next(error);
   }
@@ -51,13 +49,14 @@ router.post('/productList', async (req, res, next) => {
 
 //상품 목록 조회 API(상품명, 작성자명, 상품 상태, 날짜)
 router.get('/productList', async (req, res) => {
-  const products = await Product.find().sort({ date: -1 }).exec();
+  const products = await Product.find().sort({ createdAt: -1 }).exec();
   const formattedProducts = products.map((product) => {
     return {
+      _id: product._id,
       title: product.title,
       author: product.author,
       status: product.status,
-      date: product.date,
+      createdAt: product.createdAt,
     };
   });
 
@@ -72,16 +71,17 @@ router.get('/productList/:productId', async (req, res) => {
   const detailedProduct = await Product.findById(productId).exec();
 
   return res.status(200).json({
+    _id: detailedProduct._id,
     title: detailedProduct.title,
     content: detailedProduct.content,
     author: detailedProduct.author,
     status: detailedProduct.status,
-    date: detailedProduct.date,
+    updatedAt: detailedProduct.updatedAt,
   });
 });
 
 //상품 정보 수정 API(상품명, 작성 내용, 상품 상태, 비밀번호)
-router.patch('/productList/:productId', async (req, res, next) => {
+router.put('/productList/:productId', async (req, res, next) => {
   try {
     const { productId } = req.params;
     const { title, author, content, password, status } = req.body;
@@ -97,7 +97,13 @@ router.patch('/productList/:productId', async (req, res, next) => {
     }
     console.log('currentProductList:', currentProductList);
 
-    await validationTest.validateAsync({ title, content, password, status });
+    await validationTest.validateAsync({
+      title,
+      author,
+      content,
+      password,
+      status,
+    });
 
     if (
       title === currentProductList.title &&
@@ -111,10 +117,11 @@ router.patch('/productList/:productId', async (req, res, next) => {
     await currentProductList.save();
 
     return res.status(200).json({
+      message: '상품 정보를 수정하였습니다.',
       title: currentProductList.title,
       content: currentProductList.content,
       author: currentProductList.author,
-      date: currentProductList.date,
+      createdAt: currentProductList.createdAt,
       status: currentProductList.status,
       password: currentProductList.password,
       order: currentProductList.order,

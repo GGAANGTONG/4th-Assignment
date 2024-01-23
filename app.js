@@ -4,7 +4,7 @@ import productsRouter from './routes/products.router.js';
 import errorHandlerMiddleware from './middlewares/error-handler.middleware.js';
 
 const app = express();
-const PORT = 8500;
+const PORT = 4500;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
